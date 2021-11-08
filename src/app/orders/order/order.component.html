@@ -1,0 +1,85 @@
+<div class="jumbotron jumbtron-fluid">
+    <h3 class="display-4 text-center">
+      <img src="/assets/img/restaurant.png" height="112" width="112">
+      Restaurant App
+    </h3>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <form #form="ngForm" autocomplete="off" *ngIf="service.orders" (submit)="onSubmit(form)">
+                <div class="row" *ngFor="let order of orders;">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Order No</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">#</div>
+                                </div>
+                                <input name="OrderNo" [(ngModel)]="service.orders[0].OrderNo" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Customer</label>
+                            <select name="CustomerID" [(ngModel)]="service.orders[0].CustomerID" class="form-control" [class.is-valid]="!isValid && service.orders[0].CustomerID==0">
+                                <option value="0">-Select-</option>
+                                <option value="{{item.CustomerID}}" *ngFor="let item of customerList">{{item.Name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Payment Method</label>
+                            <select name="PMethod" [(ngModel)]="service.orders[0].PMethod" class="form-control">
+                                <option value="">-Select-</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Card">Card</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Grand Total</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">$</div>
+                                </div>
+                                <input name="GTotal" [(ngModel)]="service.orders[0].GTotal" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-borderless">
+                    <thead class="thead-light" *ngFor="let order of orders;">
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>
+                            <button type="submit" class="btn btn-sm btn-success text-white" (click)="AddOrEditOrderItem(null, order.OrderID)">Add Item</button>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="orderItems.length==0">
+                            <td class="font-italic text-center" colspan="5" [class.text-danger]="!isValid && service.orderItems.length==0">
+                                No Food Items selected for this order
+                            </td>
+                        </tr>
+                        <tr *ngFor="let item of service.orderItems; let i=index">
+                            <td>{{item.ItemName}}</td>
+                            <td>{{item.Price}}</td>
+                            <td>{{item.Quantity}}</td>
+                            <td>{{item.Total}}</td>
+                            <td>
+                                <button type="submit" class="btn btn-sm btn-info text-white" (click)="AddOrEditOrderItem(i, item.OrderID)">Edit</button>
+                                <button type="submit"  class="btn btn-sm btn-danger text-white ml-1" (click)="onDeleteOrderItem(item.OrderItemID, i)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-dark">Submit</button>
+                    <button type="submit" class="btn btn-outline-dark ml-3" routerLink='/orders'>View Orders</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
